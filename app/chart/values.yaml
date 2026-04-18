@@ -3,3 +3,6 @@ image:
   tag: "1"    
                
 secretWord: "placeholder"  
+
+imagePullSecrets:
+  - name: gitlab-registry-secret
