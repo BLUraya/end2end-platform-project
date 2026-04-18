@@ -1,5 +1,6 @@
 # קבצים אישיים/הגדרות מקומיות
 runner-values.yaml
+deployer-rbac.yaml
 
 # Terraform - הכי בטוח
 **/.terraform/*
