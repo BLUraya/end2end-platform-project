@@ -51,7 +51,8 @@ deploy_to_eks:
       SECRET_JSON=$(curl -sS -H "X-Vault-Token: $VAULT_CI_TOKEN" $VAULT_ADDR/v1/secret/data/myapp)
     
     # הדפסת ה-JSON המלא כדי שנראה מה באמת חזר מ-Vault!
-    - echo "Vault returned: $SECRET_JSON"
+    - >
+      echo "Vault returned: $SECRET_JSON"
     
     # חילוץ המילה
     - SECRET_WORD=$(echo $SECRET_JSON | jq -r '.data.data.Assignment')
