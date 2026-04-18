@@ -9,7 +9,7 @@ services:
       - "8200:8200"
     restart: always
     environment:
-      VAULT_SERVER_CONFIG: |
+      VAULT_LOCAL_CONFIG: |
         ui = true
         listener "tcp" {
           address     = "0.0.0.0:8200"

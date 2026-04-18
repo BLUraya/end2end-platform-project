@@ -18,6 +18,8 @@ services:
 
         external_url 'http://infinity-app-alb-167884405.eu-central-1.elb.amazonaws.com'
 
+        registry_external_url 'http://infinity-app-alb-167884405.eu-central-1.elb.amazonaws.com:5050'
+
         gitlab_rails['gitlab_shell_ssh_port'] = 2222
 
     ports:
@@ -27,6 +29,8 @@ services:
       - '443:443'
 
       - '2222:22'
+
+      - '5050:5050'
 
     volumes:
 
