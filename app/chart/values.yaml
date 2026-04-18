@@ -1,5 +1,5 @@
 image:
-  repository: infinity-app 
+  repository: 10.0.1.168:5050/bluraya55/infinity-home-assignment
   tag: "1"    
                
 secretWord: "placeholder"  
