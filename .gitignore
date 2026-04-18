@@ -1,0 +1,13 @@
+# קבצים אישיים/הגדרות מקומיות
+runner-values.yaml
+
+# Terraform - הכי בטוח
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+
+# Ansible
+ansible/*.retry
+# אם יש לך קובץ סודות של אנסיבל (Vault)
+ansible/group_vars/all/secret.yml 

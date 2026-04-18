@@ -1,0 +1,5 @@
+image:
+  repository: infinity-app 
+  tag: "1"    
+               
+secretWord: "placeholder"  

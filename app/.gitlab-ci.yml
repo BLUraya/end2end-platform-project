@@ -1,0 +1,64 @@
+image: docker:20.10.16
+
+# מאפשר לנו להריץ Docker-in-Docker כדי לבנות את ה-Image
+services:
+  - docker:20.10.16-dind
+
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
+  # משתנה אוטומטי של גיטלאב שמרכיב את שם ה-Image והתגית (Commit SHA)
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA 
+
+stages:
+  - build
+  - test
+  - push
+  - deploy
+
+build_image:
+  stage: build
+  script:
+    - echo "Building Docker image..."
+    - docker build -t $IMAGE_TAG .
+
+test_image:
+  stage: test
+  script:
+    - echo "Running container in background for testing..."
+    - docker run -d --name test-app -p 3000:3000 $IMAGE_TAG
+    - sleep 5 # נותן ל-Node.js שנייה לעלות
+    - apk add --no-cache curl
+    - echo "Testing with curl..."
+    - curl -f http://docker:3000/health || exit 1
+
+push_registry:
+  stage: push
+  before_script:
+    # הזדהות אוטומטית ל-Registry הפנימי של GitLab
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - echo "Pushing image to GitLab Container Registry..."
+    - docker push $IMAGE_TAG
+
+deploy_to_eks:
+  stage: deploy
+  # Image שמכיל בתוכו כבר את Helm ו-kubectl
+  image: dtzar/helm-kubectl:3.12 
+  script:
+    - apk add --no-cache jq curl
+    
+    # 1. משיכת הסוד מ-Vault (Authentication & Authorization)
+    - echo "Fetching secret from Vault..."
+    - >
+      SECRET_JSON=$(curl -s -H "X-Vault-Token: $VAULT_CI_TOKEN" $VAULT_ADDR/v1/secret/data/myapp)
+    - SECRET_WORD=$(echo $SECRET_JSON | jq -r '.data.data.Assignment')
+    - echo "Secret retrieved successfully!"
+
+    # 2. פריסה לקלאסטר עם Helm והזרקת הסוד
+    - echo "Deploying to EKS..."
+    - >
+      helm upgrade --install infinity-app ./chart
+      --set image.repository=$CI_REGISTRY_IMAGE
+      --set image.tag=$CI_COMMIT_SHORT_SHA
+      --set secretWord="$SECRET_WORD"

@@ -1,0 +1,24 @@
+
+services:
+  vault:
+    image: hashicorp/vault:latest
+    container_name: vault
+    user: "root"
+    command: server
+    ports:
+      - "8200:8200"
+    restart: always
+    environment:
+      VAULT_SERVER_CONFIG: |
+        ui = true
+        listener "tcp" {
+          address     = "0.0.0.0:8200"
+          tls_disable = 1
+        }
+        storage "file" {
+          path = "/vault/file"
+        }
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - /opt/vault/data:/vault/file
