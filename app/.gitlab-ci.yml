@@ -12,33 +12,29 @@ services:
     command: ["--tls=false"]  
 
 stages:
-  - build
-  - test
-  - push
+  - build, test and push
   - deploy
 
 build_image:
-  stage: build
+  stage: build, test and push
   script:
-    - echo "Building Docker image..."
-    - docker build -t $IMAGE_TAG app/.
+    - cd app
 
-test_image:
-  stage: test
-  script:
+    # build
+    - echo "Building Docker image..."
+    - docker build -t $IMAGE_TAG .
+    
+    # test
     - echo "Running container in background for testing..."
     - docker run -d --name test-app -p 3000:3000 $IMAGE_TAG
     - sleep 5 # נותן ל-Node.js שנייה לעלות
     - apk add --no-cache curl
     - echo "Testing with curl..."
-    - curl -f http://docker:3000/health || exit 1
+    - curl -f http://localhost:3000/health || exit 1
+    - docker rm -f test-app
 
-push_registry:
-  stage: push
-  before_script:
-    # הזדהות אוטומטית ל-Registry הפנימי של GitLab
+    # push
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:
     - echo "Pushing image to GitLab Container Registry..."
     - docker push $IMAGE_TAG
 
@@ -47,6 +43,7 @@ deploy_to_eks:
   # Image שמכיל בתוכו כבר את Helm ו-kubectl
   image: dtzar/helm-kubectl:3.12 
   script:
+    - cd app
     - apk add --no-cache jq curl
     
     # 1. משיכת הסוד מ-Vault (Authentication & Authorization)
