@@ -48,7 +48,7 @@ deploy_to_eks:
 
     - echo "Fetching secret from Vault..."
     - >
-      SECRET_JSON=$(curl -sS -H "X-Vault-Token: $VAULT_CI_TOKEN" $VAULT_ADDR/v1/secret/data/myapp)
+      SECRET_JSON=$(curl -sS -H "X-Vault-Token: $VAULT_CI_TOKEN" $VAULT_ADDR/v1/kv/data/myapp)
     
     # הדפסת ה-JSON המלא כדי שנראה מה באמת חזר מ-Vault!
     - >
