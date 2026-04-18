@@ -1,14 +1,15 @@
 image: docker:20.10.16
 
-# מאפשר לנו להריץ Docker-in-Docker כדי לבנות את ה-Image
-services:
-  - docker:20.10.16-dind
-
 variables:
   DOCKER_HOST: tcp://localhost:2375
   DOCKER_TLS_CERTDIR: ""
   # משתנה אוטומטי של גיטלאב שמרכיב את שם ה-Image והתגית (Commit SHA)
   IMAGE_TAG: infinity:$CI_COMMIT_SHORT_SHA 
+
+services:
+  - name: docker:20.10.16-dind
+    # שורה קריטית: כופה על הדיימון לרוץ בלי הצפנה כדי שיתאים ל-2375
+    command: ["--tls=false"]  
 
 stages:
   - build
