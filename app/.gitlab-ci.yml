@@ -8,7 +8,7 @@ variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_TLS_CERTDIR: ""
   # משתנה אוטומטי של גיטלאב שמרכיב את שם ה-Image והתגית (Commit SHA)
-  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA 
+  IMAGE_TAG: infinity:$CI_COMMIT_SHORT_SHA 
 
 stages:
   - build
