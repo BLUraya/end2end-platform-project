@@ -48,8 +48,12 @@ deploy_to_eks:
     
     # 1. משיכת הסוד מ-Vault (Authentication & Authorization)
     - echo "Fetching secret from Vault..."
+    - echo "Trying to reach Vault at $VAULT_ADDR"
     - >
-      SECRET_JSON=$(curl -s -H "X-Vault-Token: $VAULT_CI_TOKEN" $VAULT_ADDR/v1/secret/data/myapp)
+      SECRET_JSON=$(curl -sS -H "X-Vault-Token: $VAULT_CI_TOKEN" $VAULT_ADDR/v1/secret/data/myapp)
+    - echo "Vault response length is ${#SECRET_JSON} characters"
+    #- >
+    #  SECRET_JSON=$(curl -s -H "X-Vault-Token: $VAULT_CI_TOKEN" $VAULT_ADDR/v1/secret/data/myapp)
     - SECRET_WORD=$(echo $SECRET_JSON | jq -r '.data.data.Assignment')
     - echo "Secret retrieved successfully!"
 
