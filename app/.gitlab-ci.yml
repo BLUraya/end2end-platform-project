@@ -45,22 +45,45 @@ deploy_to_eks:
   script:
     - cd app
     - apk add --no-cache jq curl
-    
-    # 1. משיכת הסוד מ-Vault (Authentication & Authorization)
-    - echo "Fetching secret from Vault..."
-    - echo "Trying to reach Vault at $VAULT_ADDR"
-    - >
-      SECRET_JSON=$(curl -sS -H "X-Vault-Token: $VAULT_CI_TOKEN" $VAULT_ADDR/v1/secret/data/myapp)
-    - echo "Vault response length is ${#SECRET_JSON} characters"
-    #- >
-    #  SECRET_JSON=$(curl -s -H "X-Vault-Token: $VAULT_CI_TOKEN" $VAULT_ADDR/v1/secret/data/myapp)
-    - SECRET_WORD=$(echo $SECRET_JSON | jq -r '.data.data.Assignment')
-    - echo "Secret retrieved successfully!"
 
-    # 2. פריסה לקלאסטר עם Helm והזרקת הסוד
+    - echo "Fetching secret from Vault..."
+    - SECRET_JSON=$(curl -sS -H "X-Vault-Token: $VAULT_CI_TOKEN" $VAULT_ADDR/v1/secret/data/myapp)
+    
+    # הדפסת ה-JSON המלא כדי שנראה מה באמת חזר מ-Vault!
+    - echo "Vault returned: $SECRET_JSON"
+    
+    # חילוץ המילה
+    - SECRET_WORD=$(echo $SECRET_JSON | jq -r '.data.data.Assignment')
+    - echo "The extracted secret word is: '$SECRET_WORD'"
+    
+    # הפקודה של Helm - הוספנו בדיקה שאם הסוד ריק, הוא לא יריץ את Helm ויקרוס
+    - >
+      if [ -z "$SECRET_WORD" ] || [ "$SECRET_WORD" == "null" ]; then
+        echo "Error: Secret is empty! Stopping before Helm deploy."
+        exit 1
+      fi
     - echo "Deploying to EKS..."
     - >
-      helm upgrade --install infinity-app ./chart
-      --set image.repository=$CI_REGISTRY_IMAGE
-      --set image.tag=$CI_COMMIT_SHORT_SHA
+      helm upgrade --install infinity-app ./chart 
+      --set image.repository=$CI_REGISTRY_IMAGE 
+      --set image.tag=$CI_COMMIT_SHORT_SHA 
       --set secretWord="$SECRET_WORD"
+    
+    # # 1. משיכת הסוד מ-Vault (Authentication & Authorization)
+    # - echo "Fetching secret from Vault..."
+    # - echo "Trying to reach Vault at $VAULT_ADDR"
+    # - >
+    #   SECRET_JSON=$(curl -sS -H "X-Vault-Token: $VAULT_CI_TOKEN" $VAULT_ADDR/v1/secret/data/myapp)
+    # - echo "Vault response length is ${#SECRET_JSON} characters"
+    # #- >
+    # #  SECRET_JSON=$(curl -s -H "X-Vault-Token: $VAULT_CI_TOKEN" $VAULT_ADDR/v1/secret/data/myapp)
+    # - SECRET_WORD=$(echo $SECRET_JSON | jq -r '.data.data.Assignment')
+    # - echo "Secret retrieved successfully!"
+
+    # # 2. פריסה לקלאסטר עם Helm והזרקת הסוד
+    # - echo "Deploying to EKS..."
+    # - >
+    #   helm upgrade --install infinity-app ./chart
+    #   --set image.repository=$CI_REGISTRY_IMAGE
+    #   --set image.tag=$CI_COMMIT_SHORT_SHA
+    #   --set secretWord="$SECRET_WORD"
