@@ -20,7 +20,7 @@ build_image:
   stage: build
   script:
     - echo "Building Docker image..."
-    - docker build -t $IMAGE_TAG .
+    - docker build -t $IMAGE_TAG app/.
 
 test_image:
   stage: test
