@@ -4,7 +4,7 @@ variables:
   DOCKER_HOST: tcp://localhost:2375
   DOCKER_TLS_CERTDIR: ""
   # משתנה אוטומטי של גיטלאב שמרכיב את שם ה-Image והתגית (Commit SHA)
-  IMAGE_TAG: infinity:$CI_COMMIT_SHORT_SHA 
+  IMAGE_TAG: "infinity-app-alb-167884405.eu-central-1.elb.amazonaws.com:5050/bluraya55/infinity-home-assignment:$CI_COMMIT_SHORT_SHA 
 
 services:
   - name: docker:20.10.16-dind
