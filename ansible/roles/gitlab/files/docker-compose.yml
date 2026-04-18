@@ -10,13 +10,13 @@ services:
 
     restart: always
 
-    hostname: 'gitlab.example.com'
+    hostname: 'infinity-app-alb-167884405.eu-central-1.elb.amazonaws.com'
 
     environment:
 
       GITLAB_OMNIBUS_CONFIG: |
 
-        external_url 'http://gitlab.example.com'
+        external_url 'http://infinity-app-alb-167884405.eu-central-1.elb.amazonaws.com'
 
         gitlab_rails['gitlab_shell_ssh_port'] = 2222
 
