@@ -9,7 +9,9 @@ variables:
 services:
   - name: docker:20.10.16-dind
     # שורה קריטית: כופה על הדיימון לרוץ בלי הצפנה כדי שיתאים ל-2375
-    command: ["--tls=false"]  
+    command:
+      - --tls=false
+      - --insecure-registry=infinity-app-alb-167884405.eu-central-1.elb.amazonaws.com:5050 
 
 stages:
   - build, test and push

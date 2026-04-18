@@ -48,6 +48,14 @@ resource "aws_security_group" "gitlab_sg" {
     cidr_blocks = ["10.0.0.0/16"]
   }
 
+  # for image registery
+  ingress {
+    from_port   = 5050
+    to_port     = 5050
+    protocol    = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -98,7 +106,7 @@ resource "aws_instance" "gitlab" {
   vpc_security_group_ids = [aws_security_group.gitlab_sg.id]
 
   root_block_device {
-    volume_size = 40 
+    volume_size = 40
     volume_type = "gp3"
   }
 
@@ -115,7 +123,7 @@ resource "aws_instance" "vault" {
   vpc_security_group_ids = [aws_security_group.vault_sg.id]
 
   root_block_device {
-    volume_size = 15 
+    volume_size = 15
     volume_type = "gp3"
   }
 
@@ -134,7 +142,7 @@ resource "aws_instance" "vault" {
 
 resource "aws_s3_bucket" "ansible_ssm_bucket" {
   bucket_prefix = "infinity-ansible-ssm-"
-  force_destroy = true 
+  force_destroy = true
 }
 
 # iam
