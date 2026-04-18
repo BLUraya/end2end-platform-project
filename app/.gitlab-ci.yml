@@ -47,14 +47,16 @@ deploy_to_eks:
     - apk add --no-cache jq curl
 
     - echo "Fetching secret from Vault..."
-    - SECRET_JSON=$(curl -sS -H "X-Vault-Token: $VAULT_CI_TOKEN" $VAULT_ADDR/v1/secret/data/myapp)
+    - >
+      SECRET_JSON=$(curl -sS -H "X-Vault-Token: $VAULT_CI_TOKEN" $VAULT_ADDR/v1/secret/data/myapp)
     
     # הדפסת ה-JSON המלא כדי שנראה מה באמת חזר מ-Vault!
     - echo "Vault returned: $SECRET_JSON"
     
     # חילוץ המילה
     - SECRET_WORD=$(echo $SECRET_JSON | jq -r '.data.data.Assignment')
-    - echo "The extracted secret word is: '$SECRET_WORD'"
+    - >
+      echo "The extracted secret word is: '$SECRET_WORD'"
     
     # הפקודה של Helm - הוספנו בדיקה שאם הסוד ריק, הוא לא יריץ את Helm ויקרוס
     - >
