@@ -8,15 +8,15 @@ services:
 
     restart: always
 
-    hostname: 'infinity-app-alb-167884405.eu-central-1.elb.amazonaws.com'
+    hostname: 'gitlab.bluraya.shop'
 
     environment:
 
       GITLAB_OMNIBUS_CONFIG: |
         
-        external_url 'https://gitlab.bluraya.shop'
+        external_url 'http://gitlab.bluraya.shop'
 
-        registry_external_url 'https://registry.bluraya.shop'
+        registry_external_url 'http://registry.bluraya.shop'
 
         gitlab_rails['gitlab_shell_ssh_port'] = 2222
 
