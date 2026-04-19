@@ -1,7 +1,7 @@
 gitlabUrl: "https://gitlab.bluraya.shop"
 
 # token for registry
-runnerRegistrationToken: "Mb4rWivpRvB7-VXUjoAJ"
+#runnerRegistrationToken: "Mb4rWivpRvB7-VXUjoAJ"
 
 # rbac for gitlabrunner main
 rbac:
@@ -14,6 +14,7 @@ serviceAccount:
 
 runners:
   privileged: true
+  secret: "gitlab-runner-secret"
   # for the new pods runner
   config: |
     [[runners]]

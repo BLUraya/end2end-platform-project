@@ -1,3 +1,5 @@
+# for gitlab registry
+
 apiVersion: v1
 kind: Secret
 metadata:
@@ -6,3 +8,6 @@ metadata:
 type: kubernetes.io/dockerconfigjson
 data:
   .dockerconfigjson: eyJhdXRocyI6eyJyZWdpc3RyeS5ibHVyYXlhLnNob3AiOnsidXNlcm5hbWUiOiJnaXRsYWIrZGVwbG95LXRva2VuLTEiLCJwYXNzd29yZCI6ImdsZHQtRzR5ajZCelNUUDM1Z1UzUE1rS2giLCJhdXRoIjoiWjJsMGJHRmktR1JSWlcxdmVTMTBiMnRsYmxTUlXZHNaSFF0UnpSNW1qWkNlVk56VUZSbmVVaHJOZz09In19fQ==
+
+
+
