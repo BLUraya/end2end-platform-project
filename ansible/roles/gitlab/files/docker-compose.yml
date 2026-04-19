@@ -13,11 +13,16 @@ services:
     environment:
 
       GITLAB_OMNIBUS_CONFIG: |
+      
+        external_url 'https://gitlab.bluraya.shop' # תחזיר ל-https
+        registry_external_url 'https://registry.bluraya.shop'
         
-        external_url 'http://gitlab.bluraya.shop'
-
-        registry_external_url 'http://registry.bluraya.shop'
-
+        # השורות הקריטיות שמונעות את הלופ:
+        nginx['listen_https'] = false
+        nginx['listen_port'] = 80
+        registry_nginx['listen_https'] = false
+        registry_nginx['listen_port'] = 5050
+        
         gitlab_rails['gitlab_shell_ssh_port'] = 2222
 
     ports:
