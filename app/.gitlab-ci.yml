@@ -3,13 +3,13 @@ image: docker:20.10.16
 variables:
   DOCKER_HOST: tcp://localhost:2375
   DOCKER_TLS_CERTDIR: ""
-  # משתנה אוטומטי של גיטלאב שמרכיב את שם ה-Image והתגית (Commit SHA)
-  IMAGE_TAG: "infinity-app-alb-167884405.eu-central-1.elb.amazonaws.com:5050/bluraya55/infinity-home-assignment:$CI_COMMIT_SHORT_SHA" 
+  
+  IMAGE_TAG: "registry.bluraya.shop/bluraya55/infinity-home-assignment:$CI_COMMIT_SHORT_SHA" 
 
 services:
   - name: docker:20.10.16-dind
     # שורה קריטית: כופה על הדיימון לרוץ בלי הצפנה כדי שיתאים ל-2375
-    command: ["--tls=false", "--insecure-registry=infinity-app-alb-167884405.eu-central-1.elb.amazonaws.com:5050"]
+    command: ["--tls=false"]
 
 stages:
   - build, test and push
@@ -40,7 +40,7 @@ build_image:
 
 deploy_to_eks:
   stage: deploy
-  # Image שמכיל בתוכו כבר את Helm ו-kubectl
+ 
   image: dtzar/helm-kubectl:3.12 
   script:
     - cd app

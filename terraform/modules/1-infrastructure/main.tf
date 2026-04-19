@@ -87,18 +87,8 @@ resource "aws_security_group" "vault_sg" {
 # --------------------------------------------------------
 # ec2 intance
 
-data "aws_ami" "ubuntu" {
-  most_recent = true
-  owners      = ["099720109477"] #the cannociacl owner
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"] #latest
-  }
-}
-
 resource "aws_instance" "gitlab" {
-  ami           = data.aws_ami.ubuntu.id
+  ami           = var.gitlab-ami
   instance_type = "m7i-flex.large" # storng cpu and good for  memory
   subnet_id     = var.private_subnet_ids[0]
 
@@ -116,7 +106,7 @@ resource "aws_instance" "gitlab" {
 }
 
 resource "aws_instance" "vault" {
-  ami                    = data.aws_ami.ubuntu.id
+  ami                    = var.vault-ami
   instance_type          = "c7i-flex.large"
   subnet_id              = var.private_subnet_ids[1]
   iam_instance_profile   = aws_iam_instance_profile.ssm_profile.name

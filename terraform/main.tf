@@ -8,6 +8,8 @@ module "infra" {
   source             = "./modules/1-infrastructure"
   vpc_id             = module.vpc.vpc_id
   private_subnet_ids = module.vpc.private_subnets
+  gitlab-ami = "ami-0cf201aeaf716fd62"
+  vault-ami = "ami-0b45dcd317f57fa73"
 }
 
 
@@ -40,15 +42,6 @@ module "alb" {
   public_subnets = module.vpc.public_subnets 
   gitlab_id      = module.infra.gitlab_id
   vault_id       = module.infra.vault_id
-}
-
-# get the dns name for access in web from consule
-output "application_url" {
-  value = "http://${module.alb.alb_dns_name}"
-}
-
-output "vault_url" {
-  value = "http://${module.alb.alb_dns_name}:8200/ui/"
 }
 
 
