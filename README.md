@@ -43,6 +43,10 @@ A push-based pipeline triggered on code changes to the `app/` directory:
 * The pipeline authenticates to Vault using a specific CI/CD Policy and Token (Authorization & Authentication).
 * **Security Best Practice:** The secret is NOT built into the Docker image. Instead, the pipeline fetches the secret and creates a Kubernetes `Secret` object. The application reads it as an Environment Variable at runtime.
 
+### 5. Branching Strategy & Deployment Rules (GitLab Flow)
+* **Development Branch:** Pushes to the `development` branch trigger a "Shift-Left" pipeline (Build & Test only) to verify code integrity without affecting the live environment.
+* **Production Branch:** Pushes/Merges to the `main` branch trigger the full deployment pipeline. The deployment to EKS is protected by a **Manual Trigger** to ensure controlled and authorized releases.
+
 ## Repository Structure
 
 ```text

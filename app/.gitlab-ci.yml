@@ -13,7 +13,7 @@ stages:
   - build-test-push
   - deploy
 
-# ה-Job הזה ירוץ תמיד - גם ב-dev וגם ב-main
+# run in 2 branches main and dev
 build_image:
   stage: build-test-push
   script:
@@ -28,16 +28,13 @@ build_image:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker push $IMAGE_TAG
   rules:
-    # מריץ את הבנייה והטסטים בכל דחיפה ל-dev או ל-main
     - if: '$CI_COMMIT_BRANCH == "development" || $CI_COMMIT_BRANCH == "main"'
 
-# ה-Job הזה הוא "שומר הסף" של הפרודקשן
+# only in main(prod)
 deploy_to_eks_prod:
   stage: deploy
   image: dtzar/helm-kubectl:3.12 
   rules:
-    # 1. החוק הראשון והכי חשוב: תרוץ אך ורק אם אנחנו בבראנץ' main!
-    # 2. when: manual - הופך את זה ל"דגל". ה-Pipeline יעצור פה ויחכה שמישהו ילחץ Play
     - if: '$CI_COMMIT_BRANCH == "main"'
       when: manual
   script:
@@ -60,5 +57,5 @@ deploy_to_eks_prod:
       --set secretWord="$SECRET_WORD"
 
 
-  #tets the branch
+  #tests the branch strategy
 
