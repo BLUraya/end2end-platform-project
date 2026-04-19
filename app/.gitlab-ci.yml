@@ -44,7 +44,8 @@ deploy_to_eks_prod:
     - cd app
     - apk add --no-cache jq curl
     - echo "Fetching secret from Vault..."
-    - SECRET_JSON=$(curl -sS -H "X-Vault-Token: $VAULT_CI_TOKEN" $VAULT_ADDR/v1/kv/data/myapp)
+    - >
+      SECRET_JSON=$(curl -sS -H "X-Vault-Token: $VAULT_CI_TOKEN" $VAULT_ADDR/v1/kv/data/myapp)
     - SECRET_WORD=$(echo $SECRET_JSON | jq -r '.data.data.Assignment')
     - |
       if [ -z "$SECRET_WORD" ] || [ "$SECRET_WORD" == "null" ]; then
@@ -61,4 +62,3 @@ deploy_to_eks_prod:
 
   #tets the branch
 
-  
