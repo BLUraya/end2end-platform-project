@@ -8,7 +8,7 @@ The architecture is built with a "Production-Ready" mindset, focusing on securit
 ![Architecture Diagram](./diagram/Infinty-lab-home-assingment.drawio%20(1).svg)
 
 
-## 🛠️ Tech Stack
+##  Tech Stack
 * **Cloud Provider:** AWS
 * **Infrastructure as Code (IaC):** Terraform
 * **Configuration Management:** Ansible
@@ -44,8 +44,9 @@ A push-based pipeline triggered on code changes to the `app/` directory:
 * The pipeline authenticates to Vault using a specific CI/CD Policy and Token (Authorization & Authentication).
 * **Security Best Practice:** The secret is NOT built into the Docker image. Instead, the pipeline fetches the secret and creates a Kubernetes `Secret` object. The application reads it as an Environment Variable at runtime.
 
-##  Repository Structure
+## Repository Structure
 
+```text
 .
 ├── ansible/               # Ansible playbooks and roles for configuration
 │   ├── roles/             # Roles for docker, gitlab, and vault
@@ -59,6 +60,7 @@ A push-based pipeline triggered on code changes to the `app/` directory:
 │   ├── modules/           # VPC, ALB, Compute (EC2), and EKS modules
 │   └── main.tf            # Main Terraform file
 └── README.md              # This file
+
 
 
 
