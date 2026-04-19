@@ -24,12 +24,10 @@ The architecture is built with a "Production-Ready" mindset, focusing on securit
 ### 1. Infrastructure (Terraform)
 * **Secure Network:** Everything runs in a VPC with Private Subnets. External access is only allowed through an Application Load Balancer (ALB) in the Public Subnet.
 * **No SSH Keys (Security):** EC2 instances (GitLab and Vault) are accessed securely using AWS Systems Manager (SSM) instead of opening port 22.
-* **Storage Separation:** Compute and Data are separated. GitLab and Vault use attached external EBS volumes for persistent data. If a machine dies, the data is safe.
 * **Dynamic Inventory:** Terraform automatically generates the Ansible `inventory.ini` file with the newly created AWS instance IDs and S3 bucket details.
 
 ### 2. Configuration (Ansible)
 * Connects to the AWS instances via SSM plugin.
-* Formats and mounts the external EBS volumes.
 * Installs Docker and Docker Compose.
 * Deploys GitLab and Vault containers.
 

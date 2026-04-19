@@ -1,5 +1,5 @@
 ---
-- name: Create vault directory
+- name: create vault directory
   file:
     path: /opt/vault
     state: directory

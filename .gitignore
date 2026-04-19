@@ -1,6 +1,3 @@
-# קבצים אישיים/הגדרות מקומיות
-runner-values.yaml
-deployer-rbac.yaml
 
 
 **/.terraform/*
@@ -12,3 +9,5 @@ deployer-rbac.yaml
 ansible/*.retry
 
 gitlab-ci-test.yml
+
+test_push

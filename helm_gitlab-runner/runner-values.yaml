@@ -1,0 +1,24 @@
+gitlabUrl: "https://gitlab.bluraya.shop"
+
+# token for registry
+runnerRegistrationToken: "Mb4rWivpRvB7-VXUjoAJ"
+
+# rbac for gitlabrunner main
+rbac:
+  create: true
+  clusterWideAccess: true #for creating pods
+ 
+serviceAccount:
+  create: true
+  name: "my-runner-gitlab-runner"
+
+runners:
+  privileged: true
+  # for the new pods runner
+  config: |
+    [[runners]]
+      [runners.kubernetes]
+        namespace = "{{.Release.Namespace}}"
+        image = "ubuntu:22.04"
+        privileged = true 
+        service_account = "my-runner-gitlab-runner" 
