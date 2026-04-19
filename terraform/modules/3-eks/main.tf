@@ -10,6 +10,23 @@ module "eks" {
 
   cluster_endpoint_public_access = true 
 
+  enable_cluster_creator_admin_permissions = false
+
+  access_entries = {
+    my_admin_user = {
+      principal_arn = "arn:aws:iam::986449364495:user/Roy-Admin"
+      
+      policy_associations = {
+        admin = {
+          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+          access_scope = {
+            type = "cluster"
+          }
+        }
+      }
+    }
+  }
+
 
   node_security_group_additional_rules = {
     ingress_allow_lb_nodeports = {
