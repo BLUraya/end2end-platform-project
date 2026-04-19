@@ -1,12 +1,12 @@
 # InfinityLabs R&D - DevOps Home Assignment
 
-## 🎯 Project Overview
+##  Project Overview
 This project is an end-to-end DevOps solution for deploying a Node.js application. It includes provisioning cloud infrastructure on AWS, configuring servers automatically, and running a complete CI/CD pipeline using GitLab and HashiCorp Vault.
 
 The architecture is built with a "Production-Ready" mindset, focusing on security, automation, and data persistence.
 
-![Architecture Diagram](./architecture.png)
-*(Note: Place your architecture diagram image in the repository and update the path above)*
+![Architecture Diagram](./diagram/Infinty-lab-home-assingment.drawio%20(1).svg)
+
 
 ## 🛠️ Tech Stack
 * **Cloud Provider:** AWS
@@ -18,7 +18,7 @@ The architecture is built with a "Production-Ready" mindset, focusing on securit
 * **Secrets Management:** HashiCorp Vault
 * **Application:** Node.js (Express) & Docker
 
-## 🏗️ Architecture & Key Features
+##  Architecture & Key Features
 
 ### 1. Infrastructure (Terraform)
 * **Secure Network:** Everything runs in a VPC with Private Subnets. External access is only allowed through an Application Load Balancer (ALB) in the Public Subnet.
@@ -44,7 +44,7 @@ A push-based pipeline triggered on code changes to the `app/` directory:
 * The pipeline authenticates to Vault using a specific CI/CD Policy and Token (Authorization & Authentication).
 * **Security Best Practice:** The secret is NOT built into the Docker image. Instead, the pipeline fetches the secret and creates a Kubernetes `Secret` object. The application reads it as an Environment Variable at runtime.
 
-## 📂 Repository Structure
+##  Repository Structure
 
 .
 ├── ansible/               # Ansible playbooks and roles for configuration
@@ -61,7 +61,8 @@ A push-based pipeline triggered on code changes to the `app/` directory:
 └── README.md              # This file
 
 
-## 🚀 How to Run the Project
+
+##  How to Run the Project
 
 **Step 1: Provision Infrastructure**
 cd terraform
