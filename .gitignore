@@ -2,7 +2,7 @@
 runner-values.yaml
 deployer-rbac.yaml
 
-# Terraform - הכי בטוח
+
 **/.terraform/*
 *.tfstate
 *.tfstate.*
@@ -10,5 +10,4 @@ deployer-rbac.yaml
 
 # Ansible
 ansible/*.retry
-# אם יש לך קובץ סודות של אנסיבל (Vault)
-ansible/group_vars/all/secret.yml 
+
