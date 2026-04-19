@@ -11,3 +11,4 @@ deployer-rbac.yaml
 # Ansible
 ansible/*.retry
 
+gitlab-ci-test.yml

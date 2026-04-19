@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// שליפת הסוד שיוזרק מה-Vault בתהליך ה-CI/CD
+
 const mySecret = process.env.SECRET_WORD || "No secret injected yet";
 
 app.get('/', (req, res) => {
@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
   `);
 });
 
-// חשוב: הוספנו את הנתיב הזה כדי שה-Load Balancer יידע שהאפליקציה בריאה
+
 app.get('/health', (req, res) => {
   res.status(200).send('OK');
 });

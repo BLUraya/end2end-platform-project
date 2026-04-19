@@ -5,6 +5,7 @@ This project is an end-to-end DevOps solution for deploying a Node.js applicatio
 
 The architecture is built with a "Production-Ready" mindset, focusing on security, automation, and data persistence.
 
+##  Project Diagram
 ![Architecture Diagram](./diagram/Infinty-lab-home-assingment.drawio%20(1).svg)
 
 
