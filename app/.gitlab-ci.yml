@@ -13,7 +13,7 @@ stages:
   - build-test-push
   - deploy
 
-# ה-Job הזה ירוץ תמיד - גם ב-dev וגם ב-main
+# run in 2 branches main and dev
 build_image:
   stage: build-test-push
   script:
@@ -28,23 +28,21 @@ build_image:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker push $IMAGE_TAG
   rules:
-    # מריץ את הבנייה והטסטים בכל דחיפה ל-dev או ל-main
     - if: '$CI_COMMIT_BRANCH == "development" || $CI_COMMIT_BRANCH == "main"'
 
-# ה-Job הזה הוא "שומר הסף" של הפרודקשן
+# only in main(prod)
 deploy_to_eks_prod:
   stage: deploy
   image: dtzar/helm-kubectl:3.12 
   rules:
-    # 1. החוק הראשון והכי חשוב: תרוץ אך ורק אם אנחנו בבראנץ' main!
-    # 2. when: manual - הופך את זה ל"דגל". ה-Pipeline יעצור פה ויחכה שמישהו ילחץ Play
     - if: '$CI_COMMIT_BRANCH == "main"'
       when: manual
   script:
     - cd app
     - apk add --no-cache jq curl
     - echo "Fetching secret from Vault..."
-    - SECRET_JSON=$(curl -sS -H "X-Vault-Token: $VAULT_CI_TOKEN" $VAULT_ADDR/v1/kv/data/myapp)
+    - >
+      SECRET_JSON=$(curl -sS -H "X-Vault-Token: $VAULT_CI_TOKEN" $VAULT_ADDR/v1/kv/data/myapp)
     - SECRET_WORD=$(echo $SECRET_JSON | jq -r '.data.data.Assignment')
     - |
       if [ -z "$SECRET_WORD" ] || [ "$SECRET_WORD" == "null" ]; then
@@ -57,3 +55,7 @@ deploy_to_eks_prod:
       --set image.repository=$CI_REGISTRY_IMAGE 
       --set image.tag=$CI_COMMIT_SHORT_SHA 
       --set secretWord="$SECRET_WORD"
+
+
+  #tests the branch strategy
+

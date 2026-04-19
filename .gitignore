@@ -8,6 +8,8 @@
 # Ansible
 ansible/*.retry
 
-gitlab-ci-test.yml
-
+app/gitlab-ci-test.yml
+app/gitlab-ci-1shot.yml
 test_push
+
+helm_gitlab-runner/connect-gitlab.yml
