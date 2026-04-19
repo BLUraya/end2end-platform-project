@@ -1,10 +1,8 @@
 image: docker:20.10.16
-
 variables:
   DOCKER_HOST: tcp://localhost:2375
   DOCKER_TLS_CERTDIR: ""
   IMAGE_TAG: "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" 
-
 services:
   - name: docker:20.10.16-dind
     command: ["--tls=false"]
@@ -13,45 +11,54 @@ stages:
   - build-test-push
   - deploy
 
-# ה-Job הזה ירוץ תמיד - גם ב-dev וגם ב-main
 build_image:
   stage: build-test-push
   script:
     - cd app
+
+    # 1. Build
     - echo "Building Docker image..."
     - docker build -t $IMAGE_TAG .
+    
+    # 2. Test (Shift-Left Testing)
+    - echo "Running container in background for testing..."
     - docker run -d --name test-app -p 3000:3000 $IMAGE_TAG
     - sleep 5
     - apk add --no-cache curl
+    - echo "Testing with curl..."
     - curl -f http://localhost:3000/health || exit 1
     - docker rm -f test-app
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker push $IMAGE_TAG
-  rules:
-    # מריץ את הבנייה והטסטים בכל דחיפה ל-dev או ל-main
-    - if: '$CI_COMMIT_BRANCH == "development" || $CI_COMMIT_BRANCH == "main"'
 
-# ה-Job הזה הוא "שומר הסף" של הפרודקשן
-deploy_to_eks_prod:
+    # 3. Push
+    - echo "Logging into GitLab Container Registry..."
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - echo "Pushing image to registry..."
+    - docker push $IMAGE_TAG
+
+deploy_to_eks:
   stage: deploy
   image: dtzar/helm-kubectl:3.12 
-  rules:
-    # 1. החוק הראשון והכי חשוב: תרוץ אך ורק אם אנחנו בבראנץ' main!
-    # 2. when: manual - הופך את זה ל"דגל". ה-Pipeline יעצור פה ויחכה שמישהו ילחץ Play
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      when: manual
   script:
     - cd app
     - apk add --no-cache jq curl
+
+    # 1. Fetch Secret from Vault
     - echo "Fetching secret from Vault..."
-    - SECRET_JSON=$(curl -sS -H "X-Vault-Token: $VAULT_CI_TOKEN" $VAULT_ADDR/v1/kv/data/myapp)
+    - >
+      SECRET_JSON=$(curl -sS -H "X-Vault-Token: $VAULT_CI_TOKEN" $VAULT_ADDR/v1/kv/data/myapp)
     - SECRET_WORD=$(echo $SECRET_JSON | jq -r '.data.data.Assignment')
+    
+    # 2. Validate Secret (Guardrail)
     - |
       if [ -z "$SECRET_WORD" ] || [ "$SECRET_WORD" == "null" ]; then
-        echo "Error: Secret is empty!"
+        echo "Error: Secret is empty or null! Stopping before Helm deploy."
+        echo "Vault raw response: $SECRET_JSON"
         exit 1
       fi
-    - echo "Deploying to EKS Production..."
+    - echo "Secret successfully retrieved and validated."
+
+    # 3. Deploy to EKS with Helm
+    - echo "Deploying to EKS..."
     - >
       helm upgrade --install infinity-app ./chart 
       --set image.repository=$CI_REGISTRY_IMAGE 
