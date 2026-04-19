@@ -62,7 +62,7 @@ A push-based pipeline triggered on code changes to the `app/` directory:
 └── README.md              # This file
 
 
-
+```
 
 ##  How to Run the Project
 
