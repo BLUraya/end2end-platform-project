@@ -57,3 +57,8 @@ deploy_to_eks_prod:
       --set image.repository=$CI_REGISTRY_IMAGE 
       --set image.tag=$CI_COMMIT_SHORT_SHA 
       --set secretWord="$SECRET_WORD"
+
+
+  #tets the branch
+
+  
