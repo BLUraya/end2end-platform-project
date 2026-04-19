@@ -3,7 +3,7 @@
 ##  Project Overview
 This project is an end-to-end DevOps solution for deploying a Node.js application. It includes provisioning cloud infrastructure on AWS, configuring servers automatically, and running a complete CI/CD pipeline using GitLab and HashiCorp Vault.
 
-The architecture is built with a "Production-Ready" mindset, focusing on security, automation, and data persistence.
+The architecture is built with a "Production-Ready" mindset, focusing on security and automation.
 
 ##  Project Diagram
 ![Architecture Diagram](./diagram/Infinty-lab-home-assingment.drawio%20(1).svg)
